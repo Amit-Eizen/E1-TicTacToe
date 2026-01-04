@@ -1,6 +1,7 @@
 package com.example.e1_tictactoe
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -37,6 +38,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        playAgainButton.setOnClickListener {
+            resetGame()
+        }
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -65,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         if (turnCount == 9) {
             gameStatusTextView.text = "It's a draw!"
             disableBoard()
+            playAgainButton.visibility = View.VISIBLE
             return
         }
 
@@ -75,6 +81,24 @@ class MainActivity : AppCompatActivity() {
             currentPlayer = "X"
             gameStatusTextView.text = "Player X's turn"
         }
+    }
+
+    private fun resetGame() {
+        // 1. Clear all button texts and re-enable them
+        for (button in boardButtons) {
+            button.text = ""
+            button.isEnabled = true
+        }
+
+        // 2. Reset the turn counter and current player
+        turnCount = 0
+        currentPlayer = "X"
+
+        // 3. Reset the status text
+        gameStatusTextView.text = "Player X's turn"
+
+        // 4. Hide the "Play Again" button
+        playAgainButton.visibility = View.GONE
     }
 
     private fun checkForWin(): Boolean {
@@ -101,6 +125,7 @@ class MainActivity : AppCompatActivity() {
             if (firstSymbol.isNotEmpty() && firstSymbol == secondSymbol && firstSymbol == thirdSymbol) {
                 gameStatusTextView.text = "Player $firstSymbol wins!"
                 disableBoard()
+                playAgainButton.visibility = View.VISIBLE
                 return true // A winner was found
             }
         }
